@@ -10,7 +10,10 @@ export function ExportDataForm() {
 
     const getDataEndpoint = e.target.endpoint.value;
     const getDataFormat = e.target.format.value;
-
+    if (!getDataEndpoint) {
+      alert("Please choose endpoint");
+      return;
+    }
     (async function () {
       const weather =
         getDataEndpoint === "Current Weather Data"
