@@ -19,7 +19,7 @@ export function ExportDataForm() {
       return;
     }
     const get =
-      getDataEndpoint === "Curren Weather Data" ? getWeather : getForecast;
+      getDataEndpoint === "Current Weather Data" ? getWeather : getForecast;
 
     get({
       ...defaultSearchParams,
