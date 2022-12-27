@@ -43,7 +43,6 @@ export function ExportDataForm() {
             key={endpoint}
             name="endpoint"
             value={endpoint}
-            defaultChecked={endpoint === "Current Weather Data"}
           />
         ))}
       </Form.Group>
