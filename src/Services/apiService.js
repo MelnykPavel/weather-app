@@ -8,21 +8,19 @@ export const defaultSearchParams = {
   lang: "en",
 };
 
-export async function getWeather(data = null, mode) {
+export async function getWeather(data = null) {
   const params = new URLSearchParams({
     ...(data || defaultSearchParams),
     appid: apiKey,
-    mode: mode,
   });
 
   return await fetch(`${apiUrl}/weather?${params}`);
 }
 
-export async function getForecast(data = null, mode) {
+export async function getForecast(data = null) {
   const params = new URLSearchParams({
     ...(data || defaultSearchParams),
     appid: apiKey,
-    mode: mode,
   });
 
   return await fetch(`${apiUrl}/forecast?${params}`);
