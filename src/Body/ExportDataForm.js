@@ -38,7 +38,7 @@ export function ExportDataForm() {
         {dataEndpoints.map((endpoint) => (
           <Form.Check
             type="radio"
-            id={endpoin}
+            id={endpoint}
             label={endpoint}
             key={endpoint}
             name="endpoint"
