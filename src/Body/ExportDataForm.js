@@ -1,5 +1,9 @@
 import { Button, Form } from "react-bootstrap";
-import { getForecast, getWeather } from "../Services/apiService";
+import {
+  defaultSearchParams,
+  getForecast,
+  getWeather,
+} from "../Services/apiService";
 
 export function ExportDataForm() {
   const dataFormats = ["json", "xml", "html"];
@@ -14,24 +18,43 @@ export function ExportDataForm() {
       alert("Please choose endpoint");
       return;
     }
-    (async function () {
-      const weather =
-        getDataEndpoint === "Current Weather Data"
-          ? await getWeather(null, getDataFormat)
-          : await getForecast(null, getDataFormat);
+    const get =
+      getDataEndpoint === "Current Weather Data" ? getWeather : getForecast;
 
-      const response = await weather.text();
+    get({
+      ...defaultSearchParams,
+      getDataEndpoint,
+    })
+      .then((response) => response.text())
+      .then((data) =>
+        window
+          .open()
+          .document.body.append(
+            (document.createElement(
+              "p"
+            ).innerText = `${getDataEndpoint}, data format: ${getDataFormat}`),
+            document.createElement("hr"),
+            `${data}`
+          )
+      );
+    // (async function () {
+    //     const weather =
+    //       getDataEndpoint === "Current Weather Data"
+    //         ? await getWeather(null, getDataFormat)
+    //         : await getForecast(null, getDataFormat);
 
-      return window
-        .open()
-        .document.body.append(
-          (document.createElement(
-            "p"
-          ).innerText = `${getDataEndpoint}, data format: ${getDataFormat}`),
-          document.createElement("hr"),
-          `${response}`
-        );
-    })();
+    //     const response = await weather.text();
+
+    //     return window
+    //       .open()
+    //       .document.body.append(
+    //         (document.createElement(
+    //           "p"
+    //         ).innerText = `${getDataEndpoint}, data format: ${getDataFormat}`),
+    //         document.createElement("hr"),
+    //         `${response}`
+    //       );
+    //   })();
   };
   return (
     <Form onSubmit={handleSubmit}>
