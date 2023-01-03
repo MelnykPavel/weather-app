@@ -11,7 +11,7 @@ export const defaultSearchParams = {
 export async function getWeather(data = null) {
   const params = new URLSearchParams({
     ...(data || defaultSearchParams),
-    // appid: apiKey,
+    appid: apiKey,
   });
 
   return await fetch(`${apiUrl}/weather?${params}`);
@@ -20,7 +20,7 @@ export async function getWeather(data = null) {
 export async function getForecast(data = null) {
   const params = new URLSearchParams({
     ...(data || defaultSearchParams),
-    // appid: apiKey,
+    appid: apiKey,
   });
 
   return await fetch(`${apiUrl}/forecast?${params}`);

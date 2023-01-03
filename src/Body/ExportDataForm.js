@@ -17,7 +17,7 @@ export function ExportDataForm() {
     e.preventDefault();
 
     const getDataEndpoint = e.target.endpoint.value;
-    const getDataFormat = e.target.format.value;
+    const mode = e.target.format.value;
 
     if (!getDataEndpoint) {
       setErrorMessage("Please choose endpoint");
@@ -26,45 +26,27 @@ export function ExportDataForm() {
 
     const get =
       getDataEndpoint === "Current Weather Data" ? getWeather : getForecast;
-
     get({
       ...defaultSearchParams,
-      getDataEndpoint,
+      mode,
     })
-      .then((response) => response.text())
-      .then((data) => {
-        const objData = JSON.parse(data);
-        if (objData.cod !== 200) throw Error(objData.message);
-
+      .then(async (response) => {
+        if (!response.ok) {
+          const objData = await response.json();
+          throw Error(objData.message);
+        }
+        const data = await response.text();
         window
           .open()
           .document.body.append(
             (document.createElement(
               "p"
-            ).innerText = `${getDataEndpoint}, data format: ${getDataFormat}`),
+            ).innerText = `${getDataEndpoint}, data format: ${mode}`),
             document.createElement("hr"),
             `${data}`
           );
       })
       .catch((error) => setErrorMessage(error.message));
-    // (async function () {
-    //     const weather =
-    //       getDataEndpoint === "Current Weather Data"
-    //         ? await getWeather(null, getDataFormat)
-    //         : await getForecast(null, getDataFormat);
-
-    //     const response = await weather.text();
-
-    //     return window
-    //       .open()
-    //       .document.body.append(
-    //         (document.createElement(
-    //           "p"
-    //         ).innerText = `${getDataEndpoint}, data format: ${getDataFormat}`),
-    //         document.createElement("hr"),
-    //         `${response}`
-    //       );
-    //   })();
   };
   return (
     <>
