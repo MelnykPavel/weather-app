@@ -18,7 +18,7 @@ export function Body() {
       </Button>
       <SearchBar show={showBar} handleClose={handleCloseBar} />
       <Tabs
-        defaultActiveKey="profile"
+        defaultActiveKey="now"
         id="justify-tab-example"
         className="mb-3"
         justify

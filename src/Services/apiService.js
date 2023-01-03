@@ -4,7 +4,7 @@ const apiKey = process.env.REACT_APP_API_KEY;
 export const defaultSearchParams = {
   lat: "59.43384",
   lon: "24.75744",
-  unit: "metric",
+  units: "metric",
   lang: "en",
 };
 
