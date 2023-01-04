@@ -12,23 +12,22 @@ export function TimeSelector({ data }) {
 
   const [currentData, setCurrentData] = useState(null);
 
-  const timestampToObj = (item) => {
-    const timestamp = item.dt;
-    const momentDate = moment.unix(timestamp);
-
-    const day = momentDate.format("DD");
-    const hour = momentDate.format("HH:MM");
-    return {
-      day,
-      hour,
-    };
-  };
-
   const getCurrentData = () => {
     data?.list.forEach((item) => {
-      const { day, hour } = timestampToObj(item);
+      const timestamp = item.dt;
+      const momentDate = moment.unix(timestamp);
+
+      const day = momentDate.format("DD");
+      const hour = momentDate.format("HH:MM");
+
       if (selectedDay === day && selectedHour === hour) {
         setCurrentData(item);
+      }
+      if (!days.includes(day)) {
+        days.push(day);
+      }
+      if (!hours.includes(hour)) {
+        hours.push(hour);
       }
     });
   };
@@ -37,23 +36,17 @@ export function TimeSelector({ data }) {
     const days = [];
     const hours = [];
 
-    data?.list.forEach((item) => {
-      const { day, hour } = timestampToObj(item);
-      if (!days.includes(day)) {
-        days.push(day);
-      }
-      if (!hours.includes(hour)) {
-        hours.push(hour);
-      }
-    });
-    setDays(days);
-    setHours(hours);
-    setSelectedDay(days);
-    setSelectedHour(hours);
-
     if (data) {
       setCurrentData(data.list[0]);
+      getCurrentData();
     }
+    if (days.length && hours.length !== 0) {
+      setDays(days);
+      setHours(hours);
+    }
+
+    setSelectedDay(days);
+    setSelectedHour(hours);
   }, [data]);
 
   const handleOnChangeDays = (event) => {
