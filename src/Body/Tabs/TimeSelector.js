@@ -12,14 +12,21 @@ export function TimeSelector({ data }) {
 
   const [currentData, setCurrentData] = useState(null);
 
+  const timestampToObj = (item) => {
+    const timestamp = item.dt;
+    const momentDate = moment.unix(timestamp);
+
+    const day = momentDate.format("DD");
+    const hour = momentDate.format("HH:MM");
+    return {
+      day,
+      hour,
+    };
+  };
+
   const getCurrentData = () => {
-    data?.list.foreach((item) => {
-      const timestamp = item.dt;
-      const momentDate = moment.unix(timestamp);
-
-      const day = momentDate.format("DD");
-      const hour = momentDate.format("HH:MM");
-
+    data?.list.forEach((item) => {
+      const { day, hour } = timestampToObj(item);
       if (selectedDay === day && selectedHour === hour) {
         setCurrentData(item);
       }
@@ -30,13 +37,8 @@ export function TimeSelector({ data }) {
     const days = [];
     const hours = [];
 
-    data?.list.foreach((item) => {
-      const timestamp = item.dt;
-      const momentDate = moment.unix(timestamp);
-
-      const day = momentDate.format("DD");
-      const hour = momentDate.format("HH:MM");
-
+    data?.list.forEach((item) => {
+      const { day, hour } = timestampToObj(item);
       if (!days.includes(day)) {
         days.push(day);
       }
@@ -48,6 +50,7 @@ export function TimeSelector({ data }) {
     setHours(hours);
     setSelectedDay(days);
     setSelectedHour(hours);
+
     if (data) {
       setCurrentData(data.list[0]);
     }
@@ -57,10 +60,12 @@ export function TimeSelector({ data }) {
     setSelectedDay(event.currentTarget.value);
     getCurrentData();
   };
+
   const handleOnChangeHours = (event) => {
     setSelectedHour(event.currentTarget.value);
     getCurrentData();
   };
+
   return (
     <>
       <ButtonGroup className="w-100">

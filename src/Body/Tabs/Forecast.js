@@ -7,12 +7,14 @@ import { TimeSelector } from "./TimeSelector";
 export function Forecast() {
   const [errorMassage, setErrorMassage] = useState(null);
   const [forecastData, setForecastData] = useState(null);
+
   useEffect(() => {
     (async function () {
       try {
         const response = await getForecast();
         const data = await response.json();
-        if (data.cod !== 200) {
+
+        if (+data.cod !== 200) {
           throw Error(data.message);
         }
         setForecastData(data);

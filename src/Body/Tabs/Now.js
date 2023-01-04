@@ -13,7 +13,8 @@ export function Now() {
       try {
         const response = await getWeather();
         const data = await response.json();
-        if (data.cod !== 200) {
+        if (+data.cod !== 200) {
+          console.log("NOW");
           throw Error(data.message);
         }
         setWeatherData(data);

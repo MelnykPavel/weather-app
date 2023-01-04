@@ -23,10 +23,10 @@ export function Body() {
         className="mb-3"
         justify
       >
-        <Tab eventKey="now" title="now">
+        <Tab eventKey="now" title="Now">
           <Now />
         </Tab>
-        <Tab eventKey="forecast" title="forecast">
+        <Tab eventKey="forecast" title="Forecast">
           <Forecast />
         </Tab>
       </Tabs>
