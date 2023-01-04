@@ -12,7 +12,7 @@ export function TimeSelector({ data }) {
 
   const [currentData, setCurrentData] = useState(null);
 
-  const getCurrentData = () => {
+  const convertDateFormat = (callback) => {
     data?.list.forEach((item) => {
       const timestamp = item.dt;
       const momentDate = moment.unix(timestamp);
@@ -20,45 +20,47 @@ export function TimeSelector({ data }) {
       const day = momentDate.format("DD");
       const hour = momentDate.format("HH:MM");
 
-      if (selectedDay === day && selectedHour === hour) {
-        setCurrentData(item);
-      }
-      if (!days.includes(day)) {
-        days.push(day);
-      }
-      if (!hours.includes(hour)) {
-        hours.push(hour);
-      }
+      callback(day, hour, item);
     });
+  };
+
+  const getCurrentData = (day, hour, item) => {
+    if (selectedDay === day && selectedHour === hour) {
+      setCurrentData(item);
+    }
   };
 
   useEffect(() => {
     const days = [];
     const hours = [];
 
-    if (data) {
-      setCurrentData(data.list[0]);
-      getCurrentData();
-    }
-    if (days.length && hours.length !== 0) {
-      setDays(days);
-      setHours(hours);
-    }
-
+    const fillDaysAndHours = (day, hour) => {
+      if (!days.includes(day)) {
+        days.push(day);
+      }
+      if (!hours.includes(hour)) {
+        hours.push(hour);
+      }
+    };
+    convertDateFormat(fillDaysAndHours);
+    setDays(days);
+    setHours(hours);
     setSelectedDay(days);
     setSelectedHour(hours);
+
+    if (data) {
+      setCurrentData(data.list[0]);
+    }
   }, [data]);
 
   const handleOnChangeDays = (event) => {
     setSelectedDay(event.currentTarget.value);
-    getCurrentData();
+    convertDateFormat(getCurrentData);
   };
-
   const handleOnChangeHours = (event) => {
     setSelectedHour(event.currentTarget.value);
-    getCurrentData();
+    convertDateFormat(getCurrentData);
   };
-
   return (
     <>
       <ButtonGroup className="w-100">
