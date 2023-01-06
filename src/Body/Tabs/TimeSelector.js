@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ButtonGroup, ToggleButton } from "react-bootstrap";
 import { Data } from "./Data";
 import moment from "moment";
@@ -12,37 +12,34 @@ export function TimeSelector({ data }) {
 
   const [currentData, setCurrentData] = useState(null);
 
-  const convertDateFormat = (callback) => {
-    data?.list.forEach((item) => {
-      const timestamp = item.dt;
-      const momentDate = moment.unix(timestamp);
+  const getCurrentData = useCallback(
+    (cbFn) => {
+      data?.list.forEach((item) => {
+        const timestamp = item.dt;
+        const momentDate = moment.unix(timestamp);
 
-      const day = momentDate.format("DD");
-      const hour = momentDate.format("HH:MM");
+        const day = momentDate.format("DD");
+        const hour = momentDate.format("HH:MM");
 
-      callback(day, hour, item);
-    });
-  };
-
-  const getCurrentData = (day, hour, item) => {
-    if (selectedDay === day && selectedHour === hour) {
-      setCurrentData(item);
-    }
-  };
+        cbFn({ item, day, hour });
+      });
+    },
+    [data]
+  );
 
   useEffect(() => {
     const days = [];
     const hours = [];
 
-    const fillDaysAndHours = (day, hour) => {
+    getCurrentData(({ day, hour }) => {
       if (!days.includes(day)) {
         days.push(day);
       }
       if (!hours.includes(hour)) {
         hours.push(hour);
       }
-    };
-    convertDateFormat(fillDaysAndHours);
+    });
+
     setDays(days);
     setHours(hours);
     setSelectedDay(days);
@@ -51,15 +48,23 @@ export function TimeSelector({ data }) {
     if (data) {
       setCurrentData(data.list[0]);
     }
-  }, [data]);
+  }, [data, getCurrentData]);
 
   const handleOnChangeDays = (event) => {
     setSelectedDay(event.currentTarget.value);
-    convertDateFormat(getCurrentData);
+    getCurrentData((item, day, hour) => {
+      if (selectedDay === day && selectedHour === hour) {
+        setCurrentData(item);
+      }
+    });
   };
   const handleOnChangeHours = (event) => {
     setSelectedHour(event.currentTarget.value);
-    convertDateFormat(getCurrentData);
+    getCurrentData((item, day, hour) => {
+      if (selectedDay === day && selectedHour === hour) {
+        setCurrentData(item);
+      }
+    });
   };
   return (
     <>
