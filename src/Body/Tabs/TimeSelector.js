@@ -19,9 +19,9 @@ export function TimeSelector({ data }) {
         const momentDate = moment.unix(timestamp);
 
         const day = momentDate.format("DD");
-        const hour = momentDate.format("HH:MM");
+        const hour = momentDate.format("HH:mm");
 
-        cbFn({ item, day, hour });
+        cbFn(item, day, hour);
       });
     },
     [data]
@@ -31,7 +31,7 @@ export function TimeSelector({ data }) {
     const days = [];
     const hours = [];
 
-    getCurrentData(({ day, hour }) => {
+    getCurrentData((item, day, hour) => {
       if (!days.includes(day)) {
         days.push(day);
       }
@@ -41,31 +41,45 @@ export function TimeSelector({ data }) {
     });
 
     setDays(days);
-    setHours(hours);
+    setHours(hours.sort());
     setSelectedDay(days);
     setSelectedHour(hours);
 
     if (data) {
       setCurrentData(data.list[0]);
     }
+    console.log(hours);
   }, [data, getCurrentData]);
 
   const handleOnChangeDays = (event) => {
     setSelectedDay(event.currentTarget.value);
     getCurrentData((item, day, hour) => {
-      if (selectedDay === day && selectedHour === hour) {
-        setCurrentData(item);
+      if (event.currentTarget.value === days[0]) {
+        const firstActiveHour = hours.find(
+          (hour) => !chekDatePast(days[0], hour)
+        );
+
+        if (event.currentTarget.value === day && firstActiveHour === hour) {
+          setSelectedHour(firstActiveHour);
+          setCurrentData(item);
+        }
+      } else {
+        if (event.currentTarget.value === day && selectedHour === hour) {
+          setCurrentData(item);
+        }
       }
     });
   };
   const handleOnChangeHours = (event) => {
     setSelectedHour(event.currentTarget.value);
     getCurrentData((item, day, hour) => {
-      if (selectedDay === day && selectedHour === hour) {
+      if (selectedDay === day && event.currentTarget.value === hour) {
         setCurrentData(item);
       }
     });
   };
+  const chekDatePast = (days, hour) =>
+    moment().unix() > moment(`${days[0]} ${hour}`, "DD HH:mm").unix();
   return (
     <>
       <ButtonGroup className="w-100">
@@ -77,7 +91,7 @@ export function TimeSelector({ data }) {
             variant="outline-primary"
             name="day"
             value={day}
-            checked={selectedDay === day}
+            checked={day === selectedDay}
             onChange={handleOnChangeDays}
           >
             {day}
@@ -93,8 +107,9 @@ export function TimeSelector({ data }) {
             variant={"outline-primary"}
             name="hour"
             value={hour}
-            checked={selectedHour === hour}
+            checked={hour === selectedHour}
             onChange={handleOnChangeHours}
+            disabled={chekDatePast(days[0], hour) && selectedDay === days[0]}
           >
             {hour}
           </ToggleButton>
