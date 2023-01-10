@@ -3,14 +3,12 @@ import { ButtonGroup, ToggleButton } from "react-bootstrap";
 import { Data } from "./Data";
 import moment from "moment";
 
-export function TimeSelector({ data }) {
+export function TimeSelector({ data, currentData, setCurrentData }) {
   const [selectedDay, setSelectedDay] = useState(0);
   const [selectedHour, setSelectedHour] = useState(0);
 
   const [days, setDays] = useState([]);
   const [hours, setHours] = useState([]);
-
-  const [currentData, setCurrentData] = useState(null);
 
   const getCurrentData = useCallback(
     (cbFn) => {
@@ -46,10 +44,9 @@ export function TimeSelector({ data }) {
     setSelectedHour(hours);
 
     if (data) {
-      setCurrentData(data.list[0]);
+      setCurrentData({ ...data.list[0], coord: data.city.coord });
     }
-    console.log(hours);
-  }, [data, getCurrentData]);
+  }, [data, getCurrentData, setCurrentData]);
 
   const handleOnChangeDays = (event) => {
     setSelectedDay(event.currentTarget.value);
@@ -61,11 +58,11 @@ export function TimeSelector({ data }) {
 
         if (event.currentTarget.value === day && firstActiveHour === hour) {
           setSelectedHour(firstActiveHour);
-          setCurrentData(item);
+          setCurrentData({ ...item, coord: data.city.coord });
         }
       } else {
         if (event.currentTarget.value === day && selectedHour === hour) {
-          setCurrentData(item);
+          setCurrentData({ ...item, coord: data.city.coord });
         }
       }
     });
@@ -74,7 +71,7 @@ export function TimeSelector({ data }) {
     setSelectedHour(event.currentTarget.value);
     getCurrentData((item, day, hour) => {
       if (selectedDay === day && event.currentTarget.value === hour) {
-        setCurrentData(item);
+        setCurrentData({ ...item, coord: data.city.coord });
       }
     });
   };

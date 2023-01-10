@@ -4,9 +4,8 @@ import { getWeather } from "../../Services/apiService";
 import { Data } from "./Data";
 import { Map } from "./Map";
 
-export function Now() {
+export function Now({ weatherData, setWeatherData }) {
   const [errorMassage, setErrorMassage] = useState(null);
-  const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     (async function () {
@@ -22,11 +21,11 @@ export function Now() {
         setErrorMassage(error.message);
       }
     })();
-  }, []);
+  }, [setWeatherData]);
   return (
     <>
       <Data data={weatherData} />
-      <Map />
+      <Map weatherData={weatherData} />
       <ErrorModal
         message={errorMassage}
         handleClose={() => setErrorMassage(null)}

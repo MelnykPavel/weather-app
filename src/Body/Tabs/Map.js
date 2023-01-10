@@ -1,15 +1,15 @@
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, InfoWindow } from "@react-google-maps/api";
 import { defaultSearchParams } from "../../Services/apiService";
 
-export function Map() {
+export function Map({ weatherData }) {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_KEY,
   });
 
   const center = {
-    lat: defaultSearchParams.lat,
-    lng: defaultSearchParams.lon,
+    lat: weatherData?.coord.lat || +defaultSearchParams.lat,
+    lng: weatherData?.coord.lon || +defaultSearchParams.lon,
   };
 
   return (
@@ -18,8 +18,12 @@ export function Map() {
         <GoogleMap
           mapContainerStyle={{ height: "500px", width: "500px" }}
           center={center}
-          zoom={7}
-        />
+          zoom={10}
+        >
+          <InfoWindow position={center}>
+            <div>{weatherData?.main.temp}</div>
+          </InfoWindow>
+        </GoogleMap>
       )}
     </>
   );

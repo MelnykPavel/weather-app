@@ -7,6 +7,7 @@ import { TimeSelector } from "./TimeSelector";
 export function Forecast() {
   const [errorMassage, setErrorMassage] = useState(null);
   const [forecastData, setForecastData] = useState(null);
+  const [currentData, setCurrentData] = useState(null);
 
   useEffect(() => {
     (async function () {
@@ -26,8 +27,12 @@ export function Forecast() {
 
   return (
     <>
-      <TimeSelector data={forecastData} />
-      <Map />
+      <TimeSelector
+        data={forecastData}
+        currentData={currentData}
+        setCurrentData={setCurrentData}
+      />
+      <Map weatherData={currentData} />
       <ErrorModal
         message={errorMassage}
         handleClose={() => setErrorMassage(null)}

@@ -7,6 +7,7 @@ import "./body.scss";
 
 export function Body() {
   const [showBar, setShowBar] = useState(false);
+  const [weatherData, setWeatherData] = useState(null);
 
   const handleCloseBar = () => setShowBar(false);
   const handleShowBar = () => setShowBar(true);
@@ -16,7 +17,11 @@ export function Body() {
       <Button className="my-4" variant="primary" onClick={handleShowBar}>
         Search
       </Button>
-      <SearchBar show={showBar} handleClose={handleCloseBar} />
+      <SearchBar
+        show={showBar}
+        handleClose={handleCloseBar}
+        setWeatherData={setWeatherData}
+      />
       <Tabs
         defaultActiveKey="now"
         id="justify-tab-example"
@@ -24,7 +29,7 @@ export function Body() {
         justify
       >
         <Tab eventKey="now" title="Now">
-          <Now />
+          <Now weatherData={weatherData} setWeatherData={setWeatherData} />
         </Tab>
         <Tab eventKey="forecast" title="Forecast">
           <Forecast />
