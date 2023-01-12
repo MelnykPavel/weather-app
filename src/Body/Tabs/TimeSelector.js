@@ -70,7 +70,6 @@ export function TimeSelector({ data, currentData, setCurrentData }) {
         );
 
         if (event.currentTarget.value === day && firstActiveHour === hour) {
-          console.log(`firstActiveHour`, firstActiveHour);
           setSelectedHour(firstActiveHour);
           setCurrentData({ ...item, coord: data.city.coord });
         }

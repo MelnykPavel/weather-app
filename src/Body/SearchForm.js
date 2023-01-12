@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { getWeather, defaultSearchParams } from "../Services/apiService";
+import { getWeather } from "../Services/apiService";
 
 export function SearchForm({
   handleCloseBar,
