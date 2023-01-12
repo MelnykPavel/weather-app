@@ -1,10 +1,10 @@
 const apiUrl = "https://api.openweathermap.org/data/2.5";
 const apiKey = process.env.REACT_APP_API_KEY;
-
+//- Первый запрос на апи у нас с координатами на Эстонию. Думаю нужно переделать чтобы первый запрос был на Таллинн.
 export const defaultSearchParams = {
   lat: "59.43384",
   lon: "24.75744",
-  unit: "metric",
+  units: "metric",
   lang: "en",
 };
 

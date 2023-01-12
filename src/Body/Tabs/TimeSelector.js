@@ -40,23 +40,37 @@ export function TimeSelector({ data, currentData, setCurrentData }) {
 
     setDays(days);
     setHours(hours.sort());
-    setSelectedDay(days);
-    setSelectedHour(hours);
+    setSelectedDay(days[0]);
+
+    //При первом заходе на сайт и в таб Forecast то первое выбранное время может быть со статусом disabled. Нужно чтобы выбрана была первое активное время и информация актуальная.
+    setSelectedHour(hours.find((hour) => !checkDatePast(days, hour)));
 
     if (data) {
-      setCurrentData({ ...data.list[0], coord: data.city.coord });
+      setCurrentData({
+        ...data.list.find(
+          (obj) =>
+            obj.dt ===
+            moment(
+              `${days[0]} ${hours.find((hour) => !checkDatePast(days, hour))}`,
+              "DD HH:mm"
+            ).unix()
+        ),
+        coord: data.city.coord,
+      });
     }
   }, [data, getCurrentData, setCurrentData]);
 
   const handleOnChangeDays = (event) => {
     setSelectedDay(event.currentTarget.value);
+
     getCurrentData((item, day, hour) => {
       if (event.currentTarget.value === days[0]) {
         const firstActiveHour = hours.find(
-          (hour) => !chekDatePast(days[0], hour)
+          (hour) => !checkDatePast(days, hour)
         );
 
         if (event.currentTarget.value === day && firstActiveHour === hour) {
+          console.log(`firstActiveHour`, firstActiveHour);
           setSelectedHour(firstActiveHour);
           setCurrentData({ ...item, coord: data.city.coord });
         }
@@ -69,14 +83,17 @@ export function TimeSelector({ data, currentData, setCurrentData }) {
   };
   const handleOnChangeHours = (event) => {
     setSelectedHour(event.currentTarget.value);
+
     getCurrentData((item, day, hour) => {
       if (selectedDay === day && event.currentTarget.value === hour) {
         setCurrentData({ ...item, coord: data.city.coord });
       }
     });
   };
-  const chekDatePast = (days, hour) =>
-    moment().unix() > moment(`${days[0]} ${hour}`, "DD HH:mm").unix();
+
+  const checkDatePast = (day, hour) =>
+    moment().unix() > moment(`${day[0]} ${hour}`, "DD HH:mm").unix();
+
   return (
     <>
       <ButtonGroup className="w-100">
@@ -101,12 +118,16 @@ export function TimeSelector({ data, currentData, setCurrentData }) {
             key={idx}
             id={`hour-${idx}`}
             type="radio"
-            variant={"outline-primary"}
+            variant="outline-primary"
             name="hour"
             value={hour}
             checked={hour === selectedHour}
             onChange={handleOnChangeHours}
-            disabled={chekDatePast(days[0], hour) && selectedDay === days[0]}
+            disabled={
+              (checkDatePast(days, hour) && selectedDay === days[0]) ||
+              (!checkDatePast(days, hour) &&
+                selectedDay === days[days.length - 1])
+            }
           >
             {hour}
           </ToggleButton>
