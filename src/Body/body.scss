@@ -3,3 +3,19 @@
   height: 500px;
   background-color: aliceblue;
 }
+.icon {
+  background-color: #fff !important;
+  padding: 0;
+}
+.icon img {
+  width: 40px;
+  height: 40px;
+}
+.dayDescription {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  :first-child {
+    align-self: center;
+  }
+}

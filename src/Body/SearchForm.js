@@ -51,7 +51,6 @@ export function SearchForm({
     setWeatherData(data);
   };
 
-  // - При нажатии на поиск в форме то выбранные варианты не сохраняются. Каждый раз всё заново нужно вбивать.
   const handleOnChange = (e) => {
     switch (e.target.name) {
       case "city":
