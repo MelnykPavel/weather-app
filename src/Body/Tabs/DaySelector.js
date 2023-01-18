@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ButtonGroup, ToggleButton } from "react-bootstrap";
 import { HourSelector } from "./HourSelector";
 
-export const DaySelector = ({ setCurrentData, data, getCurrentData }) => {
+export const DaySelector = ({ data, getCurrentData }) => {
   const [selectedDay, setSelectedDay] = useState(0);
   const [days, setDays] = useState([]);
   const [hours, setHours] = useState([]);
@@ -57,7 +57,7 @@ export const DaySelector = ({ setCurrentData, data, getCurrentData }) => {
           </ToggleButton>
         ))}
       </ButtonGroup>
-      <HourSelector setCurrentData={setCurrentData} hours={hours} />
+      <HourSelector selectedDay={selectedDay} hours={hours} />
     </>
   );
 };

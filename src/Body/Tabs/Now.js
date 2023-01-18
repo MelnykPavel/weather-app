@@ -1,34 +1,37 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { ErrorModal } from "../../ErrorModal";
 import { getWeather } from "../../Services/apiService";
 import { Data } from "./Data";
 import { Map } from "./Map";
 
-export function Now({ weatherData, setWeatherData }) {
-  const [errorMassage, setErrorMassage] = useState(null);
+export function Now() {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
+
+  const searchParams = useSelector((state) => state.searchParams);
 
   useEffect(() => {
     (async function () {
       try {
-        const response = await getWeather();
+        const response = await getWeather(searchParams);
         const data = await response.json();
         if (+data.cod !== 200) {
-          console.log("NOW");
           throw Error(data.message);
         }
         setWeatherData(data);
       } catch (error) {
-        setErrorMassage(error.message);
+        setErrorMessage(error.message);
       }
     })();
-  }, [setWeatherData]);
+  }, [searchParams]);
   return (
     <>
       <Data data={weatherData} />
       <Map weatherData={weatherData} />
       <ErrorModal
-        message={errorMassage}
-        handleClose={() => setErrorMassage(null)}
+        message={errorMessage}
+        handleClose={() => setErrorMessage(null)}
       />
     </>
   );

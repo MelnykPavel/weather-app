@@ -1,144 +1,112 @@
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import { getWeather } from "../Services/apiService";
+import { useSelector, useDispatch } from "react-redux";
+import { Button, Form, FormGroup } from "react-bootstrap";
+import { setSearchParams } from "../Services/stateService";
 
-export function SearchForm({
-  handleCloseBar,
-  setWeatherData,
-  savedParams,
-  setSavedParams,
-}) {
-  const units = ["standard", "metric", "imperial"];
+export function SearchForm({ handleCloseBar }) {
+  const [selectedCity, setSelectedCity] = useState(null);
+  const searchParams = useSelector((state) => state.searchParams);
+  const dispatch = useDispatch();
 
   const cities = [
-    { label: "Tallinn", lat: 59.437, lon: 24.7536 },
-    { label: "Tartu", lat: 58.378, lon: 26.729 },
-    { label: "Pärnu", lat: 58.3917, lon: 24.4953 },
-    { label: "Kuressaare", lat: 58.255, lon: 22.4919 },
+    { label: "Tallinn", lat: 59.43696, lon: 24.75353 },
+    { label: "Tartu", lat: 58.38062, lon: 26.72509 },
+    { label: "Pärnu", lat: 58.38588, lon: 24.49711 },
+    { label: "Kuressaare", lat: 58.24806, lon: 22.50389 },
   ];
+
+  const units = ["standard", "metric", "imperial"];
 
   const languages = [
     { code: "en", label: "English" },
-    { code: "ru", label: "Russian" },
-    { code: "sv", label: "Swedish" },
-    { code: "zh_cn", label: "Chinese Simplified" },
     { code: "fi", label: "Finnish" },
+    { code: "ru", label: "Russian" },
+    { code: "se", label: "Swedish" },
+    { code: "zh_cn", label: "Chinese Simplified" },
   ];
 
-  const [selectedCity, setSelectedCity] = useState(null);
-
-  const handleCitySelect = (e) => {
-    const selectedCityObj = cities.find(
-      (city) => city.label === e.target.value
+  const handleCitySelect = (event) => {
+    const selectedCityObject = cities.find(
+      (city) => city.label === event.target.value
     );
-    setSelectedCity(selectedCityObj);
+    setSelectedCity(selectedCityObject);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     const params = {
-      lat: e.target.lat.value,
-      lon: e.target.lon.value,
-      units: e.target.units.value,
-      lang: e.target.lang.value,
+      lat: event.target.lat.value,
+      lon: event.target.lon.value,
+      units: event.target.units.value,
+      lang: event.target.lang.value,
     };
 
-    const response = await getWeather(params);
-    const data = await response.json();
+    dispatch(setSearchParams({ ...params }));
 
     handleCloseBar();
-    setWeatherData(data);
-  };
-
-  const handleOnChange = (e) => {
-    switch (e.target.name) {
-      case "city":
-        setSavedParams({ ...savedParams, city: e.target.value });
-        break;
-      case "lat":
-        setSavedParams({ ...savedParams, lat: e.target.value });
-        break;
-      case "lon":
-        setSavedParams({ ...savedParams, lon: e.target.value });
-        break;
-      case "units":
-        setSavedParams({ ...savedParams, units: e.target.id });
-        break;
-      case "lang":
-        setSavedParams({ ...savedParams, lang: e.target.value });
-        break;
-      default:
-        break;
-    }
   };
   return (
     <Form onSubmit={handleSubmit}>
-      <Form.Group className="my-4">
-        <Form.Label>City:</Form.Label>
+      <FormGroup className="my-4">
+        <Form.Label>City</Form.Label>
         <Form.Select
           name="city"
-          defaultValue={savedParams.city || cities[0]}
-          onChange={(handleCitySelect, handleOnChange)}
+          defaultValue={searchParams.city}
+          onChange={handleCitySelect}
         >
-          {cities.map((city) => (
-            <option value={city.label} key={city.label}>
+          {cities.map((city, i) => (
+            <option key={city.label} value={city.label}>
               {city.label}
             </option>
           ))}
         </Form.Select>
-      </Form.Group>
+      </FormGroup>
       <Form.Group className="mb-4">
-        <Form.Label>latitude</Form.Label>
+        <Form.Label>Latitude</Form.Label>
         <Form.Control
           type="text"
           name="lat"
-          placeholder="41.94353"
-          value={selectedCity?.lat || savedParams.lat}
-          onChange={handleOnChange}
+          placeholder="41.941"
+          value={selectedCity?.lat || searchParams.lat}
+          onChange={() => {}}
         />
-        <Form.Text className="text-muted" />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
+      <Form.Group className="mb-4">
         <Form.Label>Longitude</Form.Label>
         <Form.Control
           type="text"
           name="lon"
-          placeholder="2.17435"
-          value={selectedCity?.lon || savedParams.lon}
-          onChange={handleOnChange}
+          placeholder="2.174"
+          value={selectedCity?.lon || searchParams.lon}
+          onChange={() => {}}
         />
-        <Form.Text className="text-muted" />
       </Form.Group>
-      <Form.Group>
-        <Form.Label>Units of measurement:</Form.Label>
-        {units.map((unit) => (
+      <FormGroup>
+        <Form.Label>Units of measurement</Form.Label>
+        {units.map((unit, i) => (
           <Form.Check
             type="radio"
             id={unit}
             label={unit}
             key={unit}
             name="units"
-            defaultChecked={savedParams.units === unit}
-            onChange={handleOnChange}
+            value={unit}
+            defaultChecked={searchParams.units === unit}
           />
         ))}
-      </Form.Group>
-      <Form.Group className="my-4">
-        <Form.Label>Language:</Form.Label>
-        <Form.Select
-          name="lang"
-          defaultValue={savedParams.lang}
-          onChange={handleOnChange}
-        >
-          {languages.map((language) => (
-            <option value={language.code} key={language.code}>
+      </FormGroup>
+      <FormGroup className="my-4">
+        <Form.Label>Language</Form.Label>
+        <Form.Select name="lang" defaultValue={searchParams.lang}>
+          {languages.map((language, i) => (
+            <option key={language.code} value={language.code}>
               {language.label}
             </option>
           ))}
         </Form.Select>
-      </Form.Group>
-      <Button className="w-100" variant="primary" type="submit">
+      </FormGroup>
+      <Button className="btn-search w-100" type="submit">
         Submit
       </Button>
     </Form>
