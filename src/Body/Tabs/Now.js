@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { ErrorModal } from "../../ErrorModal";
+import { useDispatch, useSelector } from "react-redux";
 import { getWeather } from "../../Services/apiService";
+import { setErrorMessage } from "../../Services/stateService";
 import { Data } from "./Data";
 import { Map } from "./Map";
 
 export function Now() {
-  const [errorMessage, setErrorMessage] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
 
   const searchParams = useSelector((state) => state.searchParams);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async function () {
@@ -21,18 +22,14 @@ export function Now() {
         }
         setWeatherData(data);
       } catch (error) {
-        setErrorMessage(error.message);
+        dispatch(setErrorMessage(error.message));
       }
     })();
-  }, [searchParams]);
+  }, [searchParams, dispatch]);
   return (
     <>
       <Data data={weatherData} />
       <Map weatherData={weatherData} />
-      <ErrorModal
-        message={errorMessage}
-        handleClose={() => setErrorMessage(null)}
-      />
     </>
   );
 }

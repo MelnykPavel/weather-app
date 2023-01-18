@@ -1,5 +1,6 @@
-import moment from "moment";
 import { Col, Row, Table } from "react-bootstrap";
+import moment from "moment";
+import compass from "../../compass.svg";
 
 export function Data({ data }) {
   let iconURL = ``;
@@ -40,7 +41,19 @@ export function Data({ data }) {
             <td>
               <b>Wind speed:</b>
             </td>
-            <td colSpan={4}>{data?.wind.speed}</td>
+            <td colSpan={4}>
+              {data?.wind.speed} m/s
+              <img
+                alt="compass-icon"
+                src={compass}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  marginLeft: "10px",
+                  transform: `rotate(${data?.wind.deg}deg)`,
+                }}
+              />
+            </td>
           </tr>
         </tbody>
       </Table>

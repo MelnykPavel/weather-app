@@ -84,7 +84,7 @@ export function SearchForm({ handleCloseBar }) {
       </Form.Group>
       <FormGroup>
         <Form.Label>Units of measurement</Form.Label>
-        {units.map((unit, i) => (
+        {units.map((unit) => (
           <Form.Check
             type="radio"
             id={unit}
@@ -99,7 +99,7 @@ export function SearchForm({ handleCloseBar }) {
       <FormGroup className="my-4">
         <Form.Label>Language</Form.Label>
         <Form.Select name="lang" defaultValue={searchParams.lang}>
-          {languages.map((language, i) => (
+          {languages.map((language) => (
             <option key={language.code} value={language.code}>
               {language.label}
             </option>

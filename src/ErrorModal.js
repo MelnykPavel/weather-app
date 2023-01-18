@@ -1,12 +1,19 @@
 import { Button, Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { setErrorMessage } from "./Services/stateService";
 
-export function ErrorModal({ message, handleClose }) {
+export function ErrorModal() {
+  const errorMessage = useSelector((state) => state.errorMessage);
+  const dispatch = useDispatch();
+
+  const handleClose = () => dispatch(setErrorMessage(false));
+
   return (
-    <Modal show={!!message} onHide={handleClose}>
+    <Modal show={!!errorMessage} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Error</Modal.Title>
       </Modal.Header>
-      <Modal.Body>{message}</Modal.Body>
+      <Modal.Body>{errorMessage}</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
