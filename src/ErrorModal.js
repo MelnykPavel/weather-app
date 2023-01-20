@@ -6,7 +6,7 @@ export function ErrorModal() {
   const errorMessage = useSelector((state) => state.errorMessage);
   const dispatch = useDispatch();
 
-  const handleClose = () => dispatch(setErrorMessage(false));
+  const handleClose = () => dispatch(setErrorMessage(null));
 
   return (
     <Modal show={!!errorMessage} onHide={handleClose}>

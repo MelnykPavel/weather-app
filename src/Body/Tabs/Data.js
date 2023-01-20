@@ -15,7 +15,7 @@ export function Data({ data }) {
         </Col>
         <Col sm={12} md={6}>
           <img alt="icon" src={iconURL}></img>
-          <span>{data?.main.temp} ℃</span>
+          <span>{data?.main.temp}°</span>
         </Col>
       </Row>
       <Table bordered size="sm">

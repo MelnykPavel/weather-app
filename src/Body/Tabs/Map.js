@@ -12,6 +12,12 @@ export function Map({ weatherData }) {
     lng: weatherData?.coord.lon || +defaultSearchParams.lon,
   };
 
+  let iconURL = ``;
+
+  if (weatherData) {
+    iconURL = `http://openweathermap.org/img/wn/${weatherData?.weather[0].icon}@2x.png`;
+  }
+  console.log(`weatherData`, weatherData);
   return (
     <>
       {isLoaded && (
@@ -21,7 +27,10 @@ export function Map({ weatherData }) {
           zoom={10}
         >
           <InfoWindow position={center}>
-            <div> {weatherData?.main.temp} ℃</div>
+            <div>
+              <img className="weather-icon" alt="icon" src={iconURL}></img>
+              <b>{weatherData?.main.temp}°</b>
+            </div>
           </InfoWindow>
         </GoogleMap>
       )}

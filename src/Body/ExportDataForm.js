@@ -1,14 +1,14 @@
-import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { ErrorModal } from "../ErrorModal";
+import { useDispatch } from "react-redux";
 import {
   defaultSearchParams,
   getForecast,
   getWeather,
 } from "../Services/apiService";
+import { setErrorMessage } from "../Services/stateService";
 
 export function ExportDataForm() {
-  const [errorMassage, setErrorMessage] = useState(null);
+  const dispatch = useDispatch();
 
   const dataFormats = ["json", "xml", "html"];
   const dataEndpoints = ["Current Weather Data", "5 day weather forecast"];
@@ -20,7 +20,7 @@ export function ExportDataForm() {
     const mode = e.target.format.value;
 
     if (!getDataEndpoint) {
-      setErrorMessage("Please choose endpoint");
+      dispatch(setErrorMessage("Please choose endpoint"));
       return;
     }
 
@@ -46,7 +46,7 @@ export function ExportDataForm() {
             `${data}`
           );
       })
-      .catch((error) => setErrorMessage(error.message));
+      .catch((error) => dispatch(setErrorMessage(error.message)));
   };
   return (
     <>
@@ -82,10 +82,6 @@ export function ExportDataForm() {
           Export
         </Button>
       </Form>
-      <ErrorModal
-        message={errorMassage}
-        handleClose={() => setErrorMessage(null)}
-      />
     </>
   );
 }

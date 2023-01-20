@@ -9,22 +9,24 @@ export const DaySelector = ({ data, getCurrentData }) => {
   const [hours, setHours] = useState([]);
 
   useEffect(() => {
-    const firstDay = moment.unix(data?.list[0].dt).format("DD");
-    setSelectedDay(firstDay);
+    if (data) {
+      const firstDay = moment.unix(data?.list[0].dt).format("DD");
+      setSelectedDay(firstDay);
 
-    const hours = [];
-    const days = [];
+      const hours = [];
+      const days = [];
 
-    getCurrentData((item, day, hour) => {
-      if (!days.includes(day)) {
-        days.push(day);
-      }
-      if (!hours.includes(hour) && day === firstDay) {
-        hours.push({ hour, item: { ...item, coord: data.city.coord } });
-      }
-    });
-    setDays(days);
-    setHours(hours);
+      getCurrentData((item, day, hour) => {
+        if (!days.includes(day)) {
+          days.push(day);
+        }
+        if (!hours.includes(hour) && day === firstDay) {
+          hours.push({ hour, item: { ...item, coord: data.city.coord } });
+        }
+      });
+      setDays(days);
+      setHours(hours);
+    }
   }, [data, setSelectedDay, getCurrentData]);
 
   const handleOnChangeDays = (event) => {
